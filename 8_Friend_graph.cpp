@@ -16,73 +16,86 @@ const string RESET = "\033[0m";
 
 const string BOLD = "\033[1m";
 
-void drawline(int length = line_width){
-    for(int i = 0; i < length; i++){
+void drawline(int length = line_width)
+{
+    for (int i = 0; i < length; i++)
+    {
         cout << "-";
     }
     cout << endl;
 }
 
-class Graph{
-    public:
-
+class Graph
+{
+public:
     int total_capacity;
     int vertices;
-    
-    string* name;
+
+    string *name;
 
     // 2D adjacency matrix
-    bool** adj;
+    bool **adj;
 
-    Graph(): vertices(0), total_capacity(default_cap){
+    Graph() : vertices(0), total_capacity(default_cap)
+    {
         name = new string[default_cap];
-        adj = new bool*[default_cap];
+        adj = new bool *[default_cap];
 
-        for(int i = 0; i < total_capacity; i++){
+        for (int i = 0; i < total_capacity; i++)
+        {
             adj[i] = new bool[total_capacity];
-            for(int j = 0; j < total_capacity; j++){
+            for (int j = 0; j < total_capacity; j++)
+            {
                 adj[i][j] = false;
             }
         }
-
     }
 
-    Graph(int cap): vertices(0), total_capacity(cap){
+    Graph(int cap) : vertices(0), total_capacity(cap)
+    {
         name = new string[cap];
-        adj = new bool*[cap];
+        adj = new bool *[cap];
 
-        for(int i = 0; i < total_capacity; i++){
+        for (int i = 0; i < total_capacity; i++)
+        {
             adj[i] = new bool[total_capacity];
-            for(int j = 0; j < total_capacity; j++){
+            for (int j = 0; j < total_capacity; j++)
+            {
                 adj[i][j] = false;
             }
         }
-
     }
 
-    ~Graph(){
-        for(int i = 0; i < total_capacity; i++){
+    ~Graph()
+    {
+        for (int i = 0; i < total_capacity; i++)
+        {
             delete[] adj[i];
         }
         delete[] adj;
 
         delete[] name;
-    } 
+    }
 
-    bool empty(){
+    bool empty()
+    {
         return vertices == 0;
     }
 
-    bool full(){
+    bool full()
+    {
         return vertices == total_capacity;
     }
 
-    void init(int v){
-        if(v < 0){
+    void init(int v)
+    {
+        if (v < 0)
+        {
             cerr << "Negative number of vertices not allowed.\nAborted.\n";
             return;
         }
-        else if(v > total_capacity){
+        else if (v > total_capacity)
+        {
             cerr << "Memory overflow detected, try a smaller number than " << total_capacity << ".\nAborted\n";
             return;
         }
@@ -93,86 +106,108 @@ class Graph{
         // taking names of v friends
         cout << "Enter " << v << " friends in the group\n";
         cin.ignore();
-        for(int i = 0; i < v; i++){
-            cout << "Friend "<< i+1 << " : ";
+        for (int i = 0; i < v; i++)
+        {
+            cout << "Friend " << i + 1 << " : ";
             getline(cin, name[i]);
         }
 
         // asking for their connections
         display_friendlist();
-        for(int i = 0; i < v - 1; i++){
+        for (int i = 0; i < v - 1; i++)
+        {
             int count = 0;
-            while(count < v - i - 1){
-                cout << "Who " << name[i] << " is friends with?\n"   
-                    << "Press their number or press -1 to terminate the process: \n";
-                for(int j = i+1; j < v; j++){
-                    cout << j+1 << ". " << name[j] << endl;
+            while (count < v - i - 1)
+            {
+                cout << "Who " << name[i] << " is friends with?\n"
+                     << "Press their number or press -1 to terminate the process: \n";
+                for (int j = i + 1; j < v; j++)
+                {
+                    cout << j + 1 << ". " << name[j] << endl;
                 }
                 int ch;
                 cout << "Choice: ";
                 cin >> ch;
                 ch--;
                 // since pressing -1 and doing ch-- will make it -2
-                if(ch == -2){
+                if (ch == -2)
+                {
                     break;
                 }
-                else if(ch > i && ch < v){
+                else if (ch > i && ch < v)
+                {
                     adj[i][ch] = adj[ch][i] = true;
-                    cout << name[i] << " is friends with " << name[ch] << endl; 
+                    cout << name[i] << " is friends with " << name[ch] << endl;
                     count++;
                 }
             }
         }
-
     }
 
-    void display_friendlist(){
-        if(empty()){
+    void display_friendlist()
+    {
+        if (empty())
+        {
             cout << "Network is empty.\n";
             return;
         }
         cout << "Displaying friendlist of " << vertices << " length\n";
-        for(int i = 0; i < vertices; i++){
-            cout << i+1 << ". " << name[i] << endl;
+        for (int i = 0; i < vertices; i++)
+        {
+            cout << i + 1 << ". " << name[i] << endl;
         }
     }
 
-    void display_matrix(){
-        if(empty()){
+    void display_matrix()
+    {
+        if (empty())
+        {
             cout << "No vertices to show the matrix\n";
             return;
         }
 
-        for(int i = 0; i < vertices; i++){
-            for(int j = 0; j < vertices; j++){
-                if(j != vertices - 1){
-                    if(adj[i][j]){
+        for (int i = 0; i < vertices; i++)
+        {
+            for (int j = 0; j < vertices; j++)
+            {
+                if (j != vertices - 1)
+                {
+                    if (adj[i][j])
+                    {
                         cout << GREEN << adj[i][j] << RESET << " | ";
                     }
-                    else{
+                    else
+                    {
                         cout << adj[i][j] << " | ";
                     }
                 }
-                else{
-                    if(adj[i][j]){
+                else
+                {
+                    if (adj[i][j])
+                    {
                         cout << GREEN << adj[i][j] << RESET << endl;
                     }
-                    else{
+                    else
+                    {
                         cout << adj[i][j] << endl;
                     }
-                    
                 }
             }
             // print line
-            if(i != vertices - 1){
-                for(int k = 0; k < vertices; k++){
-                    if(k == 0){
+            if (i != vertices - 1)
+            {
+                for (int k = 0; k < vertices; k++)
+                {
+                    if (k == 0)
+                    {
                         cout << "--+";
                     }
-                    else if(k != vertices - 1){
+                    else if (k != vertices - 1)
+                    {
                         cout << "---+";
                     }
-                    else{
+                    else
+                    {
                         cout << "---\n";
                     }
                 }
@@ -180,7 +215,8 @@ class Graph{
         }
     }
 
-    void describe(){
+    void describe()
+    {
         cout << "Graph Description: \n";
         cout << "Total Capacity = " << total_capacity << endl;
         cout << "Total Vertices = " << vertices << endl;
@@ -191,52 +227,64 @@ class Graph{
     }
 
     // Returns out degree of a vertex i, and -1 if vertex not found
-    int degree(int i){
-        if(i < vertices){
+    int degree(int i)
+    {
+        if (i < vertices)
+        {
             int deg = 0;
-            for(int j = 0; j < vertices; j++){
-                if(adj[i][j]) deg++;
+            for (int j = 0; j < vertices; j++)
+            {
+                if (adj[i][j])
+                    deg++;
             }
             return deg;
         }
         return -1;
     }
 
-    void mutual_friends(){
+    void mutual_friends()
+    {
         int check = 0;
-        for(int i = 0; i < vertices; i++){
+        for (int i = 0; i < vertices; i++)
+        {
             int deg = degree(i);
-            if(deg > 1){
+            if (deg > 1)
+            {
                 drawline();
                 check++;
                 cout << name[i] << " is mutual friend of: \n";
                 int count = 0;
-                for(int j = 0; j < vertices; j++){
-                    if(adj[i][j]){
+                for (int j = 0; j < vertices; j++)
+                {
+                    if (adj[i][j])
+                    {
                         count++;
                         cout << count << ". " << name[j] << endl;
                     }
                 }
             }
         }
-        if(!check){
+        if (!check)
+        {
             cout << "No mutual friendship found in current network\n";
         }
     }
 
     // returns the vertex with maximum degree
-    int influencer(){
+    int influencer()
+    {
         int inf = -1;
         int max = -1;
-        for(int i = 0; i < vertices; i++){
-            if(degree(i) > max){
+        for (int i = 0; i < vertices; i++)
+        {
+            if (degree(i) > max)
+            {
                 max = degree(i);
                 inf = i;
             }
         }
         return inf;
     }
-
 
     // init
     // update a friendship
@@ -245,72 +293,81 @@ class Graph{
     // • Identify influencers (nodes with highest degree)
     // Describe the network
     // exit
-    void show_menu(){
+    void show_menu()
+    {
         cout << BLUE << "\t\t\tSocial Network" << RESET << endl;
         cout << "1. " << BOLD << "Initialize" << RESET << " new network\n";
         cout << "2. " << BOLD << "Display" << RESET << " Candidates in the Network\n";
-        cout << "3. Find " << BOLD << "Mutual friends\n" << RESET;
+        cout << "3. Find " << BOLD << "Mutual friends\n"
+             << RESET;
         cout << "4. Identify most " << BOLD << "influential" << RESET << " friend\n";
         cout << "5. " << BOLD << "Describe" << RESET << " Network using Data Structures\n";
-        cout << "6. " << BOLD << "Exit\n" << RESET;
+        cout << "6. " << BOLD << "Exit\n"
+             << RESET;
     }
 
-    void perform(int ch){
-        switch(ch){
-            case 1:
-                int v;
-                cout << "Enter the number of friends you want to add: ";
-                cin >> v;
-                init(v);
-            break;
-            
-            case 2:
-                display_friendlist();
+    void perform(int ch)
+    {
+        switch (ch)
+        {
+        case 1:
+            int v;
+            cout << "Enter the number of friends you want to add: ";
+            cin >> v;
+            init(v);
             break;
 
-            case 3:
-                cout << "Finding mutual friendships in the network: \n";
-                mutual_friends();
+        case 2:
+            display_friendlist();
             break;
 
-            case 4: 
-                if(!empty()){
-                    cout << "Most influential friend in the network is " << name[influencer()] << "!\n";
-                    cout << "With most " << degree(influencer()) << " Friends\n";
-                }
-                else{
-                    cout << "Network has no candidates!\n";
-                }
-                break;
-
-            case 5: 
-                describe();
+        case 3:
+            cout << "Finding mutual friendships in the network: \n";
+            mutual_friends();
             break;
 
-            case 6:
-                cout << "Please wait while program exits.\nExiting...\n";
-                drawline();
+        case 4:
+            if (!empty())
+            {
+                cout << "Most influential friend in the network is " << name[influencer()] << "!\n";
+                cout << "With most " << degree(influencer()) << " Friends\n";
+            }
+            else
+            {
+                cout << "Network has no candidates!\n";
+            }
             break;
 
-            default: 
-                cout << "Enter a Valid choice between 1 to 6.\n";
+        case 5:
+            describe();
+            break;
+
+        case 6:
+            cout << "Please wait while program exits.\nExiting...\n";
+            drawline();
+            break;
+
+        default:
+            cout << "Enter a Valid choice between 1 to 6.\n";
         }
     }
 
-    void run(){
+    void run()
+    {
         int choice = 0;
-        do{
+        do
+        {
             drawline();
             show_menu();
             cout << "Enter your choice: ";
             cin >> choice;
             perform(choice);
-        }while(choice != 6);
+        } while (choice != 6);
     }
-
 };
 
-int main(){
+int main()
+{
     Graph SocialNetwork;
     SocialNetwork.run();
 
